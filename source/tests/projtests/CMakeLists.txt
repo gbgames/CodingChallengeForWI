@@ -5,6 +5,7 @@ enable_testing()
 INCLUDE_DIRECTORIES (${gtest_SOURCE_DIR}/include 
 					${gtest_SOURCE_DIR} 
 					${gmock_SOURCE_DIR}/include 
+					${PROJECT_SOURCE_DIR}/source/proj
 					${PROJECT_BINARY_DIR}/source/proj 
 					Mocks)
 ADD_EXECUTABLE (Test${GB_PROJECT_NAME}-bin ${TEST_SOURCES})
