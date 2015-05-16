@@ -1,0 +1,47 @@
+This document is meant to give insight into my thinking before starting on the problem.
+
+"Given a list of people with their birth and end years (all between 1900 and 2000), find the year with the most number of people alive."
+
+So the code should take in a dataset and output a year. 
+
+=======INPUT:
+A simple design of the dataset could be a comma-separated list of entries consisting of a person's name, birth year, and death year. 
+
+I could see having a unique identifier, such as a social security number, as some people might have the same name. However, it could be assumed that if an entry is in the dataset, it represents a unique person. I could also see the need to anonymize the data to protect someone's personal information, so there might not be a person's name associated with the data.  
+
+It simplifies the work if the provided birth and end dates are represented only by years and not by dates.  
+
+A typical person might have a birth year A and a death year B in which B is greater than A. 
+
+There could be someone who was born and died in the same year. 
+
+There could be a time traveler who died in a year before he/she was born. Should this data be considered invalid? Probably, as given just a birth and death year, there isn't enough data to know which years a time traveler might be "living". For instance, being born in 1968, growing up through to 1985, going back in time from 1985 to 1955, and dying in 1956, it is not clear from the dataset that the time traveler should contribute to the number of people of living in 1955. Similarly, if the time traveler went from 1985 to 2015 and died in 2016, then the years 1985 and 2014 should not have the time traveler counted as alive. So, let's assume no time travelers for simplicity.
+
+Can there be entries in which people haven't died yet? That is, there is a birth year but not a death year? From the description, it sounds as if these are people who lived and died between 1900 and 2000, but it might be worth asking the customer if people who haven't died yet but were born in that 100 year span could be in the dataset.
+
+And if that's the case, what about people who were born before 1900 but died within the 100 years being tracked? 
+
+=======OUTPUT:
+Is the year alone providing enough value? 
+
+Would the customer also like to know how many people are alive that year? 
+
+Could the customer want a list of those people? 
+
+The most flexible answer might be to provide the year followed by a list of names. In this way, if the year is all that is needed, or if the list of names of who was alive were all that is needed, a separate step can extract it. 
+
+Which year? It is possible that the most people alive at once do so for consecutive years before one dies. Is the first year or the last year the right answer? Or is a range preferrable?  
+
+=======MODELING:
+Based on the potential need to be able to identify who is alive during a given year, it is important to keep the identities of the people associated with their years of life. Will probably need a custom data structure with the person's name, birth date, and end date.
+
+Unknown date of birth/death? If someone is born in 1900, I believe it can be assumed that this person lived at least a portion of 1900, such as December 31st, 11:59pm, and should therefore count towards the number of people alive in 1900.
+Similarly, if someone died in 1950, such as January 1st, exactly at midnight, I believe it can be assumed that this person lived at least a portion of 1950 and should therefore count towards the number of people alive in 1950. 
+
+A naive, brute force solution would be to increment by year and counting the number of entries that have that year between the birth and death dates. It would work, but it would take a long time on large datasets, and it would be useless work if most of the people in the dataset are bunched together in a few decades and so none of them are relevant to the majority of the years. 
+
+A better way is to realize that there can only be a change in the number of living people when someone is born or dies. Instead of iterating through the years of the century, iterate through the sorted list of years provided by the dataset. 
+
+Perhaps the data structure needed consists of a year, whether it was a birth or a death, and a way to associated it with a person. Then, after getting the dataset, it could be sorted. Maintaining a counter and a set of people IDs, it would be simple to iterate through the birth/death years to find the first year with the most number of people alive.
+
+Potential issue: people who are born in the same year as someone else who dies. If sorting is done exclusively by year, it is possible that the death will lower the count of people alive before the birth increases it, potentially giving an erroneous result. So sorting should be done first by year, and in the case of the need for a tie-breaker, by birth before death. 
