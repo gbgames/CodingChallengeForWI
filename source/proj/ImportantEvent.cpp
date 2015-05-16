@@ -13,5 +13,5 @@ ImportantEvent::~ImportantEvent()
 
 bool ImportantEvent::operator<(const ImportantEvent & rhs) const
 {
-	return this->year < rhs.year;
+	return (this->year != rhs.year ? (this->year < rhs.year) : (this->eventType < rhs.eventType));
 }

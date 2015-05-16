@@ -18,3 +18,12 @@ TEST(ImportantEvent, SortsByYear)
 	EXPECT_TRUE(event1 < event2);
 	EXPECT_FALSE(event2 < event1);
 }
+
+TEST(ImportantEvent, GivenTheSameYearBetweenEventsThenSortsByEventType)
+{
+	ImportantEvent event1(1999, BIRTH_EVENT, id1);
+	ImportantEvent event2(1999, DEATH_EVENT, id2);
+
+	EXPECT_TRUE(event1 < event2);
+	EXPECT_FALSE(event2 < event1);
+}
