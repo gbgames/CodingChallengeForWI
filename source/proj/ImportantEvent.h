@@ -16,4 +16,6 @@ struct ImportantEvent
 	PersonID id;
 };
 
+typedef std::vector<ImportantEvent> ImportantEvents;
+
 #endif
