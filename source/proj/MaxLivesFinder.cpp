@@ -13,9 +13,11 @@ MaxLivesFinder::~MaxLivesFinder()
 
 MaxLivesResult MaxLivesFinder::searchEvents(const ImportantEvents & events)
 {
+	ImportantEvents sortedEvents = events;
+	std::sort(sortedEvents.begin(), sortedEvents.end());
 	MaxLivesResult result;
 	MaxLivesResult currentLives;
-	for (ImportantEvents::const_iterator iter = events.begin(); iter != events.end(); ++iter)
+	for (ImportantEvents::const_iterator iter = sortedEvents.begin(); iter != sortedEvents.end(); ++iter)
 	{
 		if (iter->eventType == BIRTH_EVENT)
 		{

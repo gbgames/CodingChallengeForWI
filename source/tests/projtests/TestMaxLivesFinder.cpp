@@ -64,3 +64,20 @@ TEST_F(MaxLivesFinderFixture, GivenTwoOutOfThreePeopleWereAliveAtTheSameTimeThen
 	EXPECT_THAT(result.idCollection.at(1), Eq(id2));
 
 }
+
+TEST_F(MaxLivesFinderFixture, GivenEventsOutOfOrderThenReturnYearInWhichAllThreeAreLiving)
+{
+	events.push_back(ImportantEvent(2000, DEATH_EVENT, id3));
+	events.push_back(ImportantEvent(1982, DEATH_EVENT, id1));
+	events.push_back(ImportantEvent(1981, DEATH_EVENT, id2));
+	events.push_back(ImportantEvent(1900, BIRTH_EVENT, id1));
+	events.push_back(ImportantEvent(1951, BIRTH_EVENT, id2));
+	events.push_back(ImportantEvent(1981, BIRTH_EVENT, id3));
+	MaxLivesResult result = finder.searchEvents(events);
+
+	EXPECT_THAT(result.earliestYear, Eq(1981));
+	ASSERT_THAT(result.idCollection.size(), Eq(3));
+	EXPECT_THAT(result.idCollection.at(0), Eq(id1));
+	EXPECT_THAT(result.idCollection.at(1), Eq(id2));
+	EXPECT_THAT(result.idCollection.at(2), Eq(id3));
+}
