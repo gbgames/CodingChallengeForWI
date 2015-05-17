@@ -11,6 +11,10 @@ class MaxLivesFinder
 		~MaxLivesFinder();
 
 		MaxLivesResult searchEvents(const ImportantEvents & events);
+	
+	private:
+		void handleBirthEvent(MaxLivesResult & result, MaxLivesResult & currentLives, const ImportantEvent & event);
+		void handleDeathEvent(MaxLivesResult & currentLives, const ImportantEvent & event);
 };
 
 #endif

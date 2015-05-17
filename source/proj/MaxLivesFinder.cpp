@@ -19,18 +19,28 @@ MaxLivesResult MaxLivesFinder::searchEvents(const ImportantEvents & events)
 	{
 		if (iter->eventType == BIRTH_EVENT)
 		{
-			currentLives.earliestYear = iter->year;
-			currentLives.idCollection.push_back(iter->id);
-			if (result.idCollection.size() < currentLives.idCollection.size())
-			{
-				result = currentLives;
-			}
+			handleBirthEvent(result, currentLives, *iter);
 		}
 		else if (iter->eventType == DEATH_EVENT)
 		{
-			currentLives.idCollection.erase(std::remove(currentLives.idCollection.begin(), currentLives.idCollection.end(), iter->id));
+			handleDeathEvent(currentLives, *iter);
 		}
 	}
 
 	return result;
+}
+
+void MaxLivesFinder::handleBirthEvent(MaxLivesResult & result, MaxLivesResult & currentLives, const ImportantEvent & event)
+{
+	currentLives.earliestYear = event.year;
+	currentLives.idCollection.push_back(event.id);
+	if (result.idCollection.size() < currentLives.idCollection.size())
+	{
+		result = currentLives;
+	}
+}
+
+void MaxLivesFinder::handleDeathEvent(MaxLivesResult & currentLives, const ImportantEvent & event)
+{
+	currentLives.idCollection.erase(std::remove(currentLives.idCollection.begin(), currentLives.idCollection.end(), event.id));
 }
