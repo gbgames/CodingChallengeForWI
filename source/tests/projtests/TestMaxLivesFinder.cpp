@@ -11,11 +11,23 @@ namespace
 	PersonID id2(2);
 }
 
-TEST(MaxLivesFinder, GivenASingleBirthEventReturnYearAndIDOfEvent)
+class MaxLivesFinderFixture : public Test
 {
-	ImportantEvents events;
+	public:
+		MaxLivesFinderFixture()
+		{
+		}
+		~MaxLivesFinderFixture()
+		{
+		}
+	
+		ImportantEvents events;
+		MaxLivesFinder finder;
+};
+
+TEST_F(MaxLivesFinderFixture, GivenASingleBirthEventReturnYearAndIDOfEvent)
+{
 	events.push_back(ImportantEvent(1999, BIRTH_EVENT, id1));
-	MaxLivesFinder finder;
 	MaxLivesResult result = finder.searchEvents(events);
 
 	EXPECT_THAT(result.earliestYear, Eq(1999));
@@ -23,12 +35,10 @@ TEST(MaxLivesFinder, GivenASingleBirthEventReturnYearAndIDOfEvent)
 	EXPECT_THAT(result.idCollection.at(0), Eq(id1));
 }
 
-TEST(MaxLivesFinder, GivenTwoBirthEventsReturnYearInWhichBothIDsAreAlive)
+TEST_F(MaxLivesFinderFixture, GivenTwoBirthEventsReturnYearInWhichBothIDsAreAlive)
 {
-	ImportantEvents events;
 	events.push_back(ImportantEvent(1999, BIRTH_EVENT, id1));
 	events.push_back(ImportantEvent(2000, BIRTH_EVENT, id2));
-	MaxLivesFinder finder;
 	MaxLivesResult result = finder.searchEvents(events);
 
 	EXPECT_THAT(result.earliestYear, Eq(2000));
