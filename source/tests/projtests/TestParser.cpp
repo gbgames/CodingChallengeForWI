@@ -5,43 +5,56 @@
 
 using namespace ::testing;
 
-TEST(Parser, CreatesPeopleDataFromSingleLineOfData)
+namespace
 {
-	std::string name = "Mario Mario";
-	int birthYear = 1981;
-	int deathYear = 2000;
+	const std::string name1 = "Mario Mario";
+	const int birthYear1 = 1981;
+	const int deathYear1 = 2000;
 
-	std::stringstream fakeFile;
-	fakeFile << name << "," << birthYear << "," << deathYear;
+	const std::string name2 = "Luigi Mario";
+	const int birthYear2 = 1983;
+	const int deathYear2 = 1999;
 
-	Parser parser;
-	PeopleDataCollection people = parser.parse(fakeFile);
-
-	ASSERT_THAT(people.size(), Eq(1));
-	EXPECT_THAT(people.at(0).name, StrEq(name));
-	EXPECT_THAT(people.at(0).birthYear, Eq(birthYear));
-	EXPECT_THAT(people.at(0).deathYear, Eq(deathYear));
+	const std::string name3 = "Evil Otto";
+	const int birthYear3 = 1980;
+	const int deathYear3 = 1984;
 }
 
-TEST(Parser, CreatesPeopleDataFromMultipleLinesOfData)
+class ParserFixture : public Test
 {
-	std::string name1 = "Mario Mario";
-	int birthYear1 = 1981;
-	int deathYear1 = 2000;
-	std::string name2 = "Luigi Mario";
-	int birthYear2 = 1983;
-	int deathYear2 = 1999;
-	std::string name3 = "Evil Otto";
-	int birthYear3 = 1980;
-	int deathYear3 = 1984;
+	public:
+		ParserFixture() {}
+		~ParserFixture() {}
 
-	std::stringstream fakeFile;
-	fakeFile << name1 << "," << birthYear1 << "," << deathYear1 << std::endl;
-	fakeFile << name2 << "," << birthYear2 << "," << deathYear2 << std::endl;
-	fakeFile << name3 << "," << birthYear3 << "," << deathYear3; 
+		PeopleDataCollection people;
+		std::stringstream fakeFile;
+		Parser parser;
 
-	Parser parser;
-	PeopleDataCollection people = parser.parse(fakeFile);
+		void addPersonToFile(std::string name, int birthYear, int deathYear)
+		{
+			fakeFile << name << "," << birthYear << "," << deathYear << std::endl;
+		}
+};
+
+TEST_F(ParserFixture, CreatesPeopleDataFromSingleLineOfData)
+{
+	addPersonToFile(name1, birthYear1, deathYear1);
+
+	people = parser.parse(fakeFile);
+
+	ASSERT_THAT(people.size(), Eq(1));
+	EXPECT_THAT(people.at(0).name, StrEq(name1));
+	EXPECT_THAT(people.at(0).birthYear, Eq(birthYear1));
+	EXPECT_THAT(people.at(0).deathYear, Eq(deathYear1));
+}
+
+TEST_F(ParserFixture, CreatesPeopleDataFromMultipleLinesOfData)
+{
+	addPersonToFile(name1, birthYear1, deathYear1);
+	addPersonToFile(name2, birthYear2, deathYear2);
+	addPersonToFile(name3, birthYear3, deathYear3);
+
+	people = parser.parse(fakeFile);
 
 	ASSERT_THAT(people.size(), Eq(3));
 	EXPECT_THAT(people.at(0).name, StrEq(name1));
