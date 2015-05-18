@@ -14,5 +14,8 @@ DateValidator::~DateValidator()
 
 bool DateValidator::validate(PeopleData & person) const
 {
-	return person.birthYear >= m_beginRange && person.birthYear <= m_endRange && person.deathYear <= m_endRange;
+	bool personBornWithinRange(person.birthYear >= m_beginRange && person.birthYear <= m_endRange); 
+	bool personDiedWithinRange(person.deathYear <= m_endRange);
+
+	return personBornWithinRange && personDiedWithinRange;
 }
