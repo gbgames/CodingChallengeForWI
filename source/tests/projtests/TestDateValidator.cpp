@@ -3,17 +3,28 @@
 #include "PeopleData.h"
 #include "gtest/gtest.h"
 
-TEST(DateValidator, AcceptsPersonWithLifeInSpecifiedRange)
+using namespace ::testing;
+
+class DateValidatorFixture : public Test
 {
-	DateValidator validator(1900, 2000);
+	public:
+		DateValidatorFixture() : validator(1900, 2000)
+		{
+		}
+		~DateValidatorFixture() {}
+	
+		DateValidator validator;
+};
+
+TEST_F(DateValidatorFixture, AcceptsPersonWithLifeInSpecifiedRange)
+{
 	PeopleData person("Veronica Lake", 1922, 1973, 1);
 
 	EXPECT_TRUE(validator.validate(person));
 }
 
-TEST(DateValidator, RejectsPersonWhoWasBornBeforeSpecifiedRange)
+TEST_F(DateValidatorFixture, RejectsPersonWhoWasBornBeforeSpecifiedRange)
 {
-	DateValidator validator(1900, 2000);
 	PeopleData person("Abraham Lincoln", 1809, 1865, 1);
 
 	EXPECT_FALSE(validator.validate(person));
