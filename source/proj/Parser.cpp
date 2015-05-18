@@ -31,15 +31,25 @@ PeopleDataCollection Parser::parse(std::istream & input)
 		lastPosition = currentLine.find(',', lastPosition + 1);
 		if (lastPosition != std::string::npos)
 		{
-			std::string birthYearText = currentLine.substr(firstPosition, lastPosition);
-			std::istringstream(birthYearText) >> birthYear; 
+			std::stringstream birthYearText;
+			birthYearText << currentLine.substr(firstPosition, lastPosition);
+			birthYearText >> birthYear; 
+			if (birthYearText.fail())
+			{
+				continue;
+			}
 		}
 
 		int deathYear(-1);
 		firstPosition = lastPosition + 1;
 		lastPosition = std::string::npos;
-		std::string deathYearText = currentLine.substr(firstPosition, lastPosition);
-		std::istringstream(deathYearText) >> deathYear; 
+		std::stringstream deathYearText;
+		deathYearText << currentLine.substr(firstPosition, lastPosition);
+		deathYearText >> deathYear; 
+		if (deathYearText.fail())
+		{
+			continue;
+		}
 
 		people.push_back(PeopleData(name, birthYear, deathYear, id++));
 	}

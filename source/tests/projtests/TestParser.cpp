@@ -69,3 +69,18 @@ TEST_F(ParserFixture, CreatesPeopleDataFromMultipleLinesOfData)
 	EXPECT_THAT(people.at(2).birthYear, Eq(birthYear3));
 	EXPECT_THAT(people.at(2).deathYear, Eq(deathYear3));
 }
+
+TEST_F(ParserFixture, IgnoresBadlyFormedLines)
+{
+	fakeFile << "No years specified" << std::endl;
+	fakeFile << "Only one year specified" << "," << 1981  << "," << std::endl;
+	fakeFile << "Bad name1" << "," << "Not a year" << "," << 1904 << std::endl;
+	fakeFile << "Bad name2" << "," << 1905 << "," << "Also not a year" << std::endl;
+	addPersonToFile(name1, birthYear1, deathYear1);
+	addPersonToFile(name2, birthYear2, deathYear2);
+	addPersonToFile(name3, birthYear3, deathYear3);
+
+	people = parser.parse(fakeFile);
+
+	ASSERT_THAT(people.size(), Eq(3));
+}
