@@ -52,3 +52,10 @@ TEST_F(DateValidatorFixture, RejectsPersonWhoDiedAfterSpecifiedRange)
 
 	EXPECT_FALSE(validator.validate(tooRecentDeath));
 }
+
+TEST_F(DateValidatorFixture, RejectsTimeTravelers)
+{
+	PeopleData heyMcFlyIThoughtIToldYouNeverToComeInHereAgain("Marty McFly", 1985, 1955, 1);
+
+	EXPECT_FALSE(validator.validate(heyMcFlyIThoughtIToldYouNeverToComeInHereAgain));
+}

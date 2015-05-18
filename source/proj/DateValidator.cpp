@@ -16,6 +16,7 @@ bool DateValidator::validate(PeopleData & person) const
 {
 	bool personBornWithinRange(person.birthYear >= m_beginRange && person.birthYear <= m_endRange); 
 	bool personDiedWithinRange(person.deathYear <= m_endRange);
+	bool personIsNotATimeTraveler(person.birthYear <= person.deathYear);
 
-	return personBornWithinRange && personDiedWithinRange;
+	return personBornWithinRange && personDiedWithinRange && personIsNotATimeTraveler;
 }
