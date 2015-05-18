@@ -84,3 +84,15 @@ TEST_F(ParserFixture, IgnoresBadlyFormedLines)
 
 	ASSERT_THAT(people.size(), Eq(3));
 }
+
+TEST_F(ParserFixture, IgnoresLinesWithTooManyYearsSpecified)
+{
+	fakeFile << "Too many years" << "," << 1905 << "," << 1906 << ", "<< 1908 << std::endl;
+	addPersonToFile(name1, birthYear1, deathYear1);
+	addPersonToFile(name2, birthYear2, deathYear2);
+	addPersonToFile(name3, birthYear3, deathYear3);
+
+	people = parser.parse(fakeFile);
+
+	ASSERT_THAT(people.size(), Eq(3));
+}

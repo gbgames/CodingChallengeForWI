@@ -79,10 +79,19 @@ bool Parser::extractBirthYear(int & birthYear, size_t & firstPosition, size_t & 
 bool Parser::extractDeathYear(int & deathYear, size_t & firstPosition, const std::string currentLine) const
 {
 	bool deathYearExtracted(true);
-	std::stringstream deathYearText;
-	deathYearText << currentLine.substr(firstPosition, std::string::npos);
-	deathYearText >> deathYear; 
-	if (deathYearText.fail())
+
+	size_t lastPosition = currentLine.find(',', firstPosition);
+	if (std::string::npos == lastPosition)
+	{
+		std::stringstream deathYearText;
+		deathYearText << currentLine.substr(firstPosition, std::string::npos);
+		deathYearText >> deathYear; 
+		if (deathYearText.fail())
+		{
+			deathYearExtracted = false;
+		}
+	}
+	else
 	{
 		deathYearExtracted = false;
 	}
