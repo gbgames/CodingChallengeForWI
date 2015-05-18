@@ -14,5 +14,5 @@ DateValidator::~DateValidator()
 
 bool DateValidator::validate(PeopleData & person) const
 {
-	return person.birthYear > m_beginRange;
+	return person.birthYear > m_beginRange && person.birthYear < m_endRange;
 }

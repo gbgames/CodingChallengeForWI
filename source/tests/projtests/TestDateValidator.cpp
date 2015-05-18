@@ -29,3 +29,10 @@ TEST_F(DateValidatorFixture, RejectsPersonWhoWasBornBeforeSpecifiedRange)
 
 	EXPECT_FALSE(validator.validate(person));
 }
+
+TEST_F(DateValidatorFixture, RejectsPersonWhoWasBornAfterSpecifiedRange)
+{
+	PeopleData person("Rowan Blanchard", 2001, 2091, 1);
+	
+	EXPECT_FALSE(validator.validate(person));
+}
