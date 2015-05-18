@@ -16,7 +16,7 @@ PeopleDataCollection Parser::parse(std::istream & input)
 	PeopleDataCollection people;
 	std::string currentLine;
 	PersonID id = 1;
-	if (std::getline(input, currentLine))
+	while (std::getline(input, currentLine))
 	{
 		std::string name;
 		size_t firstPosition = 0;
