@@ -20,33 +20,24 @@ PeopleDataCollection Parser::parse(std::istream & input)
 	{
 		std::string name;
 		size_t firstPosition = 0;
-		size_t lastPosition = currentLine.find(',');
-		if (lastPosition != std::string::npos)
+		size_t lastPosition = 0;
+		if (!extractName(name, firstPosition, lastPosition, currentLine))
 		{
-			name = currentLine.substr(firstPosition, lastPosition);
+			continue;
 		}
 		
 		int birthYear(-1);
 		firstPosition = lastPosition + 1;
-		lastPosition = currentLine.find(',', lastPosition + 1);
-		if (lastPosition != std::string::npos)
+		if (!extractBirthYear(birthYear, firstPosition, lastPosition, currentLine))
 		{
-			std::stringstream birthYearText;
-			birthYearText << currentLine.substr(firstPosition, lastPosition);
-			birthYearText >> birthYear; 
-			if (birthYearText.fail())
-			{
-				continue;
-			}
+			continue;
 		}
 
 		int deathYear(-1);
 		firstPosition = lastPosition + 1;
-		lastPosition = std::string::npos;
-		std::stringstream deathYearText;
-		deathYearText << currentLine.substr(firstPosition, lastPosition);
-		deathYearText >> deathYear; 
-		if (deathYearText.fail())
+
+	
+		if (!extractDeathYear(deathYear, firstPosition, currentLine))
 		{
 			continue;
 		}
@@ -55,4 +46,46 @@ PeopleDataCollection Parser::parse(std::istream & input)
 	}
 
 	return people;
+}
+
+bool Parser::extractName(std::string & name, size_t & firstPosition, size_t & lastPosition, const std::string & currentLine) const
+{
+	lastPosition = currentLine.find(',');
+	if (lastPosition != std::string::npos)
+	{
+		name = currentLine.substr(firstPosition, lastPosition);
+	}
+
+	return std::string::npos != lastPosition;
+}
+
+bool Parser::extractBirthYear(int & birthYear, size_t & firstPosition, size_t & lastPosition, const std::string currentLine) const
+{
+	lastPosition = currentLine.find(',', firstPosition);
+	if (lastPosition != std::string::npos)
+	{
+		std::stringstream birthYearText;
+		birthYearText << currentLine.substr(firstPosition, lastPosition);
+		birthYearText >> birthYear; 
+		if (birthYearText.fail())
+		{
+			lastPosition = std::string::npos;
+		}
+	}
+
+	return std::string::npos != lastPosition;
+}
+
+bool Parser::extractDeathYear(int & deathYear, size_t & firstPosition, const std::string currentLine) const
+{
+	bool deathYearExtracted(true);
+	std::stringstream deathYearText;
+	deathYearText << currentLine.substr(firstPosition, std::string::npos);
+	deathYearText >> deathYear; 
+	if (deathYearText.fail())
+	{
+		deathYearExtracted = false;
+	}
+
+	return deathYearExtracted;
 }
