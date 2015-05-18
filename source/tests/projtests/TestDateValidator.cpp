@@ -10,3 +10,11 @@ TEST(DateValidator, AcceptsPersonWithLifeInSpecifiedRange)
 
 	EXPECT_TRUE(validator.validate(person));
 }
+
+TEST(DateValidator, RejectsPersonWhoWasBornBeforeSpecifiedRange)
+{
+	DateValidator validator(1900, 2000);
+	PeopleData person("Abraham Lincoln", 1809, 1865, 1);
+
+	EXPECT_FALSE(validator.validate(person));
+}

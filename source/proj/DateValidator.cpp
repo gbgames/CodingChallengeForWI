@@ -1,6 +1,10 @@
 #include "DateValidator.h"
 
-DateValidator::DateValidator(int startYear, int endYear)
+#include "PeopleData.h"
+
+DateValidator::DateValidator(int startYear, int endYear) : 
+	m_beginRange(startYear),
+	m_endRange(endYear)
 {
 }
 
@@ -10,5 +14,5 @@ DateValidator::~DateValidator()
 
 bool DateValidator::validate(PeopleData & person) const
 {
-	return true;
+	return person.birthYear > m_beginRange;
 }

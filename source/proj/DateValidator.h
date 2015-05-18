@@ -10,6 +10,10 @@ class DateValidator
 		~DateValidator();
 
 		bool validate(PeopleData & person) const;
+	
+	private:
+		int m_beginRange;
+		int m_endRange;
 };
 
 #endif
