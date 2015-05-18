@@ -12,52 +12,59 @@ namespace
 	PersonID id3(3);
 }
 
-TEST(EventExtractor, CreatesBirthAndDeathEventsFromASinglePerson)
+class EventExtractorFixture: public Test
 {
+	public:
+	EventExtractorFixture()
+	{
+	}
+	~EventExtractorFixture()
+	{
+	}
+
 	PeopleDataCollection people;
+	EventExtractor extractor;
+	ImportantEvents events;
+
+	void verifyEvent(const PeopleData & person, unsigned int eventIndex, EVENT::Type eventType)
+	{
+		ASSERT_THAT(events.size(), Ge(eventIndex));
+		const ImportantEvent &  event = events.at(eventIndex);
+		EXPECT_THAT(event.id, Eq(person.id));
+		EXPECT_THAT(event.eventType, Eq(eventType));
+		int relevantYear = person.birthYear;
+		if (eventType == DEATH_EVENT)
+		{
+			relevantYear = person.deathYear;
+		}
+		EXPECT_THAT(event.year, Eq(relevantYear));
+	}
+};
+
+TEST_F(EventExtractorFixture, CreatesBirthAndDeathEventsFromASinglePerson)
+{
 	people.push_back(PeopleData("Mr. Sanders", 1926, 1961, id1));
 
-	EventExtractor extractor;
-	ImportantEvents events = extractor.convert(people);
+	events = extractor.convert(people);
 
-	ASSERT_THAT(events.size(), Eq(2));
-	EXPECT_THAT(events.at(0).id, Eq(id1));
-	EXPECT_THAT(events.at(0).year, Eq(1926));
-	EXPECT_THAT(events.at(0).eventType, Eq(BIRTH_EVENT));
-	EXPECT_THAT(events.at(1).id, Eq(id1));
-	EXPECT_THAT(events.at(1).year, Eq(1961));
-	EXPECT_THAT(events.at(1).eventType, Eq(DEATH_EVENT));
+	verifyEvent(people.back(), 0, BIRTH_EVENT);
+	verifyEvent(people.back(), 1, DEATH_EVENT);
 }
 
-TEST(EventExtractor, CreatesEventsFromMultiplePeople)
+TEST_F(EventExtractorFixture, CreatesEventsFromMultiplePeople)
 {
-	PeopleDataCollection people;
 	people.push_back(PeopleData("Mr. Sanders", 1926, 1961, id1));
 	people.push_back(PeopleData("A. A. Milne", 1900, 1956, id2));
 	people.push_back(PeopleData("Julie Andrews", 1935, 2000, id3));
 
-	EventExtractor extractor;
-	ImportantEvents events = extractor.convert(people);
+	events = extractor.convert(people);
 
-	ASSERT_THAT(events.size(), Eq(6));
-	EXPECT_THAT(events.at(0).id, Eq(id1));
-	EXPECT_THAT(events.at(0).year, Eq(1926));
-	EXPECT_THAT(events.at(0).eventType, Eq(BIRTH_EVENT));
-	EXPECT_THAT(events.at(1).id, Eq(id1));
-	EXPECT_THAT(events.at(1).year, Eq(1961));
-	EXPECT_THAT(events.at(1).eventType, Eq(DEATH_EVENT));
+	verifyEvent(people.at(0), 0, BIRTH_EVENT);
+	verifyEvent(people.at(0), 1, DEATH_EVENT);
 
-	EXPECT_THAT(events.at(2).id, Eq(id2));
-	EXPECT_THAT(events.at(2).year, Eq(1900));
-	EXPECT_THAT(events.at(2).eventType, Eq(BIRTH_EVENT));
-	EXPECT_THAT(events.at(3).id, Eq(id2));
-	EXPECT_THAT(events.at(3).year, Eq(1956));
-	EXPECT_THAT(events.at(3).eventType, Eq(DEATH_EVENT));
+	verifyEvent(people.at(1), 2, BIRTH_EVENT);
+	verifyEvent(people.at(1), 3, DEATH_EVENT);
 
-	EXPECT_THAT(events.at(4).id, Eq(id3));
-	EXPECT_THAT(events.at(4).year, Eq(1935));
-	EXPECT_THAT(events.at(4).eventType, Eq(BIRTH_EVENT));
-	EXPECT_THAT(events.at(5).id, Eq(id3));
-	EXPECT_THAT(events.at(5).year, Eq(2000));
-	EXPECT_THAT(events.at(5).eventType, Eq(DEATH_EVENT));
+	verifyEvent(people.at(2), 4, BIRTH_EVENT);
+	verifyEvent(people.at(2), 5, DEATH_EVENT);
 }
