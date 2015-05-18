@@ -36,3 +36,19 @@ TEST_F(DateValidatorFixture, RejectsPersonWhoWasBornAfterSpecifiedRange)
 	
 	EXPECT_FALSE(validator.validate(person));
 }
+
+TEST_F(DateValidatorFixture, AcceptsPeopleBornAtExtremesOfRange)
+{
+	PeopleData infant("Baby", 2000, 2000, 1);
+	PeopleData centenarian("Senior citizen", 1900, 2000, 2);
+
+	EXPECT_TRUE(validator.validate(infant));
+	EXPECT_TRUE(validator.validate(centenarian));
+}
+
+TEST_F(DateValidatorFixture, RejectsPersonWhoDiedAfterSpecifiedRange)
+{
+	PeopleData tooRecentDeath("Bob Hoskins", 1942, 2014, 1);
+
+	EXPECT_FALSE(validator.validate(tooRecentDeath));
+}
