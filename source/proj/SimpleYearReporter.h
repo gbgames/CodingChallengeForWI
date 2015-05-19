@@ -20,17 +20,16 @@
 #ifndef GB_SIMPLE_YEAR_REPORTER_H
 #define GB_SIMPLE_YEAR_REPORTER_H
 
+#include "IReporter.h"
 #include <string>
 
-class MaxLivesResult; 
-
-class SimpleYearReporter
+class SimpleYearReporter : public IReporter
 {
 	public:
 		SimpleYearReporter();
-		~SimpleYearReporter();
+		virtual ~SimpleYearReporter();
 
-		std::string report(const MaxLivesResult & result) const;
+		virtual std::string report(const MaxLivesResult & result) const;
 };
 
 #endif

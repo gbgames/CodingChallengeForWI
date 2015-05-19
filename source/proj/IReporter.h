@@ -18,24 +18,18 @@
     along with CodingChallengeForWI.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef GB_PEOPLE_REPORTER_H
-#define GB_PEOPLE_REPORTER_H
+#ifndef GB_IREPORTER_H
+#define GB_IREPORTER_H
 
-#include "IReporter.h"
-#include "PeopleData.h"
+#include <string>
 
-class PeopleReporter : public IReporter
+class MaxLivesResult; 
+
+class IReporter
 {
 	public:
-		PeopleReporter(const PeopleDataCollection & people);
-		virtual ~PeopleReporter();
+		virtual ~IReporter() {}
 
-		virtual std::string report(const MaxLivesResult & result) const;
-	
-	private:
-		std::string getNameById(PersonID id) const;
-
-		const PeopleDataCollection & m_people;
+		virtual std::string report(const MaxLivesResult & result) const = 0;
 };
-
 #endif

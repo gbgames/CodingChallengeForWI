@@ -1,2 +1,11 @@
+$ ./CodingChallengeForWI-bin 
+Usage: CodingChallengeForWI [FILE] <SIMPLE|DETAILED>
+
 $ ./CodingChallengeForWI-bin ../../TestFile.csv 
 Year with most living people at once: 1930
+
+$ ./CodingChallengeForWI-bin ../../TestFile.csv DETAILED
+Year with most living people at once: 1930
+Luigi Mario
+Princess Peach
+Frogger
