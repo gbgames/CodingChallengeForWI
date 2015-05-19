@@ -1,0 +1,11 @@
+Mario Mario,1981,2000
+Luigi Mario,1920,1940
+Princess Peach,1921,1980
+Evil Otto,1930,2020
+Malformed Line With No Years
+Malformed Line With Too Many Years,1998,1999,2000
+Malformed Line With Too Few Years,1999,
+Marty McFly,1985,1955
+Too Young,2005,2015
+Too Old,1800,1886
+Frogger,1930,1950
