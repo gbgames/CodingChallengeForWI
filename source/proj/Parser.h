@@ -4,13 +4,15 @@
 #include "PeopleData.h"
 #include <iosfwd>
 
+class IDateValidator;
+
 class Parser
 {
 	public:
 		Parser();
 		~Parser();
 
-		PeopleDataCollection parse(std::istream & input);
+		PeopleDataCollection parse(std::istream & input, const IDateValidator & validator);
 	
 	private:
 		bool extractName(std::string & name, size_t & firstPosition, size_t & lastPosition, const std::string & currentLine) const;

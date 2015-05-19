@@ -1,5 +1,6 @@
 #include "Parser.h"
 
+#include "DateValidatorMock.h"
 #include <sstream>
 #include "gmock/gmock-matchers.h"
 
@@ -23,11 +24,15 @@ namespace
 class ParserFixture : public Test
 {
 	public:
-		ParserFixture() {}
+		ParserFixture() 
+		{
+			ON_CALL(validator, validate(_)).WillByDefault(Return(true));
+		}
 		~ParserFixture() {}
 
 		PeopleDataCollection people;
 		std::stringstream fakeFile;
+		NiceMock<DateValidatorMock> validator;
 		Parser parser;
 
 		void addPersonToFile(std::string name, int birthYear, int deathYear)
@@ -40,12 +45,23 @@ TEST_F(ParserFixture, CreatesPeopleDataFromSingleLineOfData)
 {
 	addPersonToFile(name1, birthYear1, deathYear1);
 
-	people = parser.parse(fakeFile);
+	people = parser.parse(fakeFile, validator);
 
 	ASSERT_THAT(people.size(), Eq(1));
 	EXPECT_THAT(people.at(0).name, StrEq(name1));
 	EXPECT_THAT(people.at(0).birthYear, Eq(birthYear1));
 	EXPECT_THAT(people.at(0).deathYear, Eq(deathYear1));
+}
+
+TEST_F(ParserFixture, WhenValidatorRejectsPersonThenDoNotAddItToPeopleCollection)
+{
+	addPersonToFile(name1, birthYear1, deathYear1);
+
+	EXPECT_CALL(validator, validate(_)).WillOnce(Return(false));
+
+	people = parser.parse(fakeFile, validator);
+
+	EXPECT_THAT(people.size(), Eq(0));
 }
 
 TEST_F(ParserFixture, CreatesPeopleDataFromMultipleLinesOfData)
@@ -54,7 +70,7 @@ TEST_F(ParserFixture, CreatesPeopleDataFromMultipleLinesOfData)
 	addPersonToFile(name2, birthYear2, deathYear2);
 	addPersonToFile(name3, birthYear3, deathYear3);
 
-	people = parser.parse(fakeFile);
+	people = parser.parse(fakeFile, validator);
 
 	ASSERT_THAT(people.size(), Eq(3));
 	EXPECT_THAT(people.at(0).name, StrEq(name1));
@@ -80,7 +96,7 @@ TEST_F(ParserFixture, IgnoresBadlyFormedLines)
 	addPersonToFile(name2, birthYear2, deathYear2);
 	addPersonToFile(name3, birthYear3, deathYear3);
 
-	people = parser.parse(fakeFile);
+	people = parser.parse(fakeFile, validator);
 
 	ASSERT_THAT(people.size(), Eq(3));
 }
@@ -92,7 +108,7 @@ TEST_F(ParserFixture, IgnoresLinesWithTooManyYearsSpecified)
 	addPersonToFile(name2, birthYear2, deathYear2);
 	addPersonToFile(name3, birthYear3, deathYear3);
 
-	people = parser.parse(fakeFile);
+	people = parser.parse(fakeFile, validator);
 
 	ASSERT_THAT(people.size(), Eq(3));
 }

@@ -1,5 +1,6 @@
 #include "Parser.h"
 
+#include "IDateValidator.h"
 #include <sstream>
 #include <string>
 
@@ -11,7 +12,7 @@ Parser::~Parser()
 {
 }
 
-PeopleDataCollection Parser::parse(std::istream & input)
+PeopleDataCollection Parser::parse(std::istream & input, const IDateValidator & validator)
 {
 	PeopleDataCollection people;
 	std::string currentLine;
@@ -42,7 +43,12 @@ PeopleDataCollection Parser::parse(std::istream & input)
 			continue;
 		}
 
-		people.push_back(PeopleData(name, birthYear, deathYear, id++));
+		PeopleData person(name, birthYear, deathYear, id);
+		if (validator.validate(person))
+		{
+			people.push_back(person);
+			++id;
+		}
 	}
 
 	return people;

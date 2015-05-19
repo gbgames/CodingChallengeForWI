@@ -1,15 +1,15 @@
 #ifndef GB_DATE_VALIDATOR_H
 #define GB_DATE_VALIDATOR_H
 
-struct  PeopleData;
+#include "IDateValidator.h"
 
-class DateValidator
+class DateValidator : public IDateValidator
 {
 	public:
 		DateValidator(int startYear, int endYear);
-		~DateValidator();
+		virtual ~DateValidator();
 
-		bool validate(PeopleData & person) const;
+		virtual bool validate(PeopleData & person) const;
 	
 	private:
 		int m_beginRange;
